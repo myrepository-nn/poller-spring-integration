@@ -1,9 +1,11 @@
 package com.nishant.spring.integration.nodsl;
 
+import java.io.DataInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.boot.SpringApplication;
@@ -39,11 +41,11 @@ public class SpringIntegrationInboundAdapterApplication {
 	}
 	@Bean
 	public CronTrigger cronTrigger() {
-		return  new CronTrigger("0 * * * * ?");
+		return  new CronTrigger("0/10 * * * * ?");
 	}
 	@Bean
 	public PeriodicTrigger periodicTrigger() {
-		return  new PeriodicTrigger(4000);
+		return  new PeriodicTrigger(2000);
 	}
 	@Bean
 	public PollerMetadata  pollerMetadata () {
@@ -68,8 +70,10 @@ public class SpringIntegrationInboundAdapterApplication {
 			public Message<String> receive() {
 				System.out.println("/////"+new Timestamp(new Date().getTime()));
 				Message<String> msf=null;
-				if(new Date().getMinutes()==35) {
-					msf= MessageBuilder.withPayload(new Timestamp(new Date().getTime())+"......").build();
+				Random rand = new Random();
+				int  n = rand.nextInt(10) + 1;	
+				if(n>5) {
+					msf= MessageBuilder.withPayload(n+"......"+new Timestamp(new Date().getTime())+"......").build();
 				}
 				return msf;
 			}
